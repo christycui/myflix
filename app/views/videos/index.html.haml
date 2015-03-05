@@ -1,0 +1,11 @@
+- @categories.each do |cat|
+  %article.video_category
+    %header
+      %h3
+        %a{href: category_path(cat)}= cat.name
+    .videos.row
+      - cat.videos.each do |video|
+        %div.video.col-sm-2
+          %a{:href => video_path(video)}<
+            %img{:src => video.small_cover_url}
+  
