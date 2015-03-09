@@ -1,8 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Category, :type => :model do
-  it { should have_many(:videos)}
+  it { should have_many(:videos) }
+  
   describe "#recent_videos" do
+    
     it "returns an array of 6 videos in descending recency if there are more than six videos in the category" do
       commedies = Category.create(name: "Commedies")
       family_guy = Video.create(title: 'Family Guy', description: "Family Guy", category: commedies)
