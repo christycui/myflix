@@ -16,14 +16,12 @@ describe SessionsController do
   
   describe "POST create" do
     context "when authentication passes" do
+      let(:user) { Fabricate(:user) }
       before do
-        user = Fabricate(:user)
         post :create, email_address: user.email_address, password: user.password
       end
       
       it "saves user id in session" do
-        user = Fabricate(:user)
-        post :create, email_address: user.email_address, password: user.password
         expect(session[:user_id]).to eq(user.id)
       end
       
