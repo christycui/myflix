@@ -20,7 +20,7 @@ describe VideosController do
       session[:user_id] = Fabricate(:user).id
       family_guy = Fabricate(:video, title: "Family Guy")
       get :search, search_str: "family"
-      expect(assigns(:results)). to eq([family_guy])
+      expect(assigns(:results)).to eq([family_guy])
     end
       
     it "redirect user to login page for unauthenticated users" do
