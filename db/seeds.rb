@@ -10,6 +10,3 @@
 
 # christy = User.create(email_address: "example.com", password: "password", full_name: "Christy")
 # Review.create(user: christy, video: family_guy, body: "Funny.", rating: 4)
-
-QueueItem.create(position: 1, user: User.where(full_name: "Haiying Cui").first, video: Video.where(title: "Family Guy 3").first)
-QueueItem.create(position: 2, user: User.where(full_name: "Haiying Cui").first, video: Video.where(title: "Family Guy").first)
