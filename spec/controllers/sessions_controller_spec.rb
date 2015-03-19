@@ -2,10 +2,6 @@ require "rails_helper"
 
 describe SessionsController do
   describe 'GET new' do
-    it "renders new template for unauthenticated users" do
-      get :new
-      expect(response).to render_template :new
-    end
     
     it "redirects to home page for authenticated users" do
       session[:user_id] = Fabricate(:user).id

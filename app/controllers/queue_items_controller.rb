@@ -6,7 +6,7 @@ class QueueItemsController < ApplicationController
   
   def create
     video = Video.find(params[:video_id])
-    if !video_already_in_my_queue?(video)
+    unless video_already_in_my_queue?(video)
       QueueItem.create(user: current_user, video: video, position: new_queue_item_position)
       flash[:notice] = "The video is added to your queue!"
     else
@@ -18,10 +18,8 @@ class QueueItemsController < ApplicationController
   def destroy
     queue_item = QueueItem.find(params[:id])
     queue_item.destroy if queue_item.user == current_user
-    position = 1
-    current_user.queue_items.each do |queue_item|
-      queue_item.update(position: position)
-      position += 1
+    current_user.queue_items.each_with_index do |queue_item, index|
+      queue_item.update(position: index + 1)
     end
     redirect_to my_queue_path
   end

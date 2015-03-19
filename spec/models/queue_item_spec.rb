@@ -3,14 +3,9 @@ require "rails_helper"
 describe QueueItem do
   it { should belong_to(:user) }
   it { should belong_to(:video) }
-  
-  describe "#video_title" do
-    it "returns the title of the video associated with the queue item" do
-      video = Fabricate(:video)
-      queue_item = Fabricate(:queue_item, video: video)
-      expect(queue_item.video_title).to eq(video.title)
-    end
-  end
+  it { should delegate_method(:title).to(:video).with_prefix(:video) }
+  it { should delegate_method(:category_name).to(:category).as(:name) }
+  it { should delegate_method(:category).to(:video) }
   
   describe "#rating" do
     it "returns the rating from the review by the user on the associated video if there is one" do
@@ -28,22 +23,5 @@ describe QueueItem do
       expect(queue_item.rating).to eq(nil)
     end
   end
-  
-  describe "#category_name" do
-    it "returns the category of the video" do
-      category = Fabricate(:category, name: "Drama")
-      video = Fabricate(:video, category: category)
-      queue_item = Fabricate(:queue_item, video: video)
-      expect(queue_item.category_name).to eq("Drama")
-    end
-  end
-  
-  describe "#category" do
-    it "returns the category of the video" do
-      category = Fabricate(:category)
-      video = Fabricate(:video, category: category)
-      queue_item = Fabricate(:queue_item, video: video)
-      expect(queue_item.category).to eq(category)
-    end
-  end
+
 end

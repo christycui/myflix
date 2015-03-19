@@ -10,7 +10,7 @@
         %p= @video.description
         .actions
           %a.btn.btn-primary Watch Now
-          = link_to "+ My Queue", queue_items_path(video_id: @video.id), method: "POST", class: "btn btn-default"
+          = link_to_if !current_user.queue_items.map(&:video).include?(@video), "+ My Queue", queue_items_path(video_id: @video.id), method: "POST", class: "btn btn-default"
 
 
 %section.reviews.container
@@ -22,7 +22,7 @@
             = f.label :rating, "Rate this video"
             .row
               .col-sm-3
-                = f.select("rating", options_for_select([5, 4, 3, 2, 1].map {|n| [pluralize(n, "Star"), n]}), {}, {class: "form-control"})
+                = f.select("rating", options_for_rating), {}, {class: "form-control"})
           .form-group
             = f.label :body, "Write Review"
             .row
