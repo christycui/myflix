@@ -2,6 +2,8 @@ class QueueItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :video
   
+  validates_numericality_of :position, {only_integer: true}
+  
   delegate :category, to: :video
   delegate :title, to: :video, prefix: :video
   
@@ -13,5 +15,5 @@ class QueueItem < ActiveRecord::Base
   def category_name
     category.name
   end
-
+  
 end

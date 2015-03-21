@@ -15,12 +15,23 @@ class QueueItemsController < ApplicationController
     redirect_to my_queue_path
   end
   
+  def update_queue
+    begin
+      ActiveRecord::Base.transaction do
+        update_queue_items
+        normalize_queue_items
+      end
+    rescue ActiveRecord::RecordInvalid
+      flash[:error] = "Please enter a valid input."
+    end
+    
+    redirect_to my_queue_path
+  end
+  
   def destroy
     queue_item = QueueItem.find(params[:id])
     queue_item.destroy if queue_item.user == current_user
-    current_user.queue_items.each_with_index do |queue_item, index|
-      queue_item.update(position: index + 1)
-    end
+    normalize_queue_items
     redirect_to my_queue_path
   end
   
@@ -32,5 +43,18 @@ class QueueItemsController < ApplicationController
   
   def video_already_in_my_queue?(video)
     current_user.queue_items.map(&:video).include?(video)
+  end
+  
+  def update_queue_items
+    params[:queue_items].each do |queue_item_data|
+      queue_item = QueueItem.find(queue_item_data[:id])
+      queue_item.update!(position: queue_item_data[:position]) if queue_item.user == current_user
+    end
+  end
+  
+  def normalize_queue_items
+    current_user.queue_items.each_with_index do |queue_item, index|
+      queue_item.update(position: index + 1)
+    end
   end
 end
