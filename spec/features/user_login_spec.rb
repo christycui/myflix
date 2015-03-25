@@ -10,8 +10,8 @@ feature "user logs in" do
   
   scenario "user fails to log in because of incorrect credentials" do
     visit login_path
-    fill_in "email_address", :with => Faker::Internet.email
-    fill_in "password", :with => Faker::Lorem.word
+    fill_in "email_address", with: Faker::Internet.email
+    fill_in "password", with: Faker::Lorem.word
     click_button("Sign In")
     expect(page).to have_content('Sign In')
     expect(page).to have_content('Invalid email or password')
