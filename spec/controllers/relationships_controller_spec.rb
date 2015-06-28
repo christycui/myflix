@@ -11,29 +11,32 @@ describe RelationshipsController do
       let(:action) { get :index }
     end
     
-    it 'sets @following variable' do
-      user1 = Fabricate(:user)
-      relationship = Relationship.create(user_id: user1.id, follower_id: current_user.id)
-      get :index
-      expect(assigns(:following)).to match_array([relationship])
-    end
-    
   end
   
   describe 'DELETE :destroy' do
     
-    it 'deletes the relationship' do
-      user1 = Fabricate(:user)
-      relationship = Relationship.create(user_id: user1.id, follower_id: current_user.id)
+    let(:user1) { Fabricate(:user) }
+    
+    it_behaves_like 'requires sign in' do
+      let(:action) { delete :destroy, id: 2 }
+    end
+    
+    it 'deletes the relationship if follower is current user' do
+      relationship = Fabricate(:relationship, user: user1, follower: current_user)
       delete :destroy, id: relationship
       expect(Relationship.count).to eq(0)
     end
     
     it 'redirects to relationships#index' do
-      user1 = Fabricate(:user)
-      relationship = Relationship.create(user_id: user1.id, follower_id: current_user.id)
+      relationship = Fabricate(:relationship, user: user1, follower: current_user)
       delete :destroy, id: relationship
-      expect(response).to redirect_to relationships_path
+      expect(response).to redirect_to people_path
+    end
+    
+    it 'does not delete the relationship if follower is not current user' do
+      relationship = Fabricate(:relationship, user: user1, follower: Fabricate(:user))
+      delete :destroy, id: relationship
+      expect(Relationship.count).to eq(1)
     end
     
   end

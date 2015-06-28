@@ -1,7 +1,6 @@
 class RelationshipsController < ApplicationController
   before_action :require_user
   def index
-    @following = Relationship.where(follower_id: current_user.id)
   end
   
   def create
@@ -9,8 +8,8 @@ class RelationshipsController < ApplicationController
   
   def destroy
     relationship = Relationship.find params[:id]
-    relationship.destroy
-    redirect_to relationships_path
+    relationship.destroy if relationship.follower == current_user
+    redirect_to people_path
   end
   
 end
