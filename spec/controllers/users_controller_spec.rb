@@ -53,14 +53,5 @@ describe UsersController do
       get :show, id: user
       expect(assigns(:user)).to eq(user)
     end
-    
-    it 'sets @relationship variable' do
-      current_user = Fabricate(:user)
-      set_current_user(current_user)
-      user = Fabricate(:user)
-      relationship = Relationship.create(user_id: user.id, follower_id: current_user.id)
-      get :show, id: user
-      expect(assigns(:relationship)).to eq(relationship)
-    end
   end
 end

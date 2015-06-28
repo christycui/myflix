@@ -16,7 +16,6 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find params[:id]
-    @relationship = Relationship.where(user_id: @user, follower_id: current_user).first
   end
   
 end

@@ -4,6 +4,9 @@ class RelationshipsController < ApplicationController
   end
   
   def create
+    user = User.find params[:user_id]
+    Relationship.create(user: user, follower: current_user) unless current_user.follows?(user) || user == current_user
+    redirect_to user_path(user)
   end
   
   def destroy

@@ -10,4 +10,19 @@ describe User do
   it { should have_many(:relationships) }
   it { should have_many(:followers).through(:relationships) }
   it { should have_many(:following_relationships).class_name('Relationship').with_foreign_key(:follower_id) }
+  
+  describe '#follows?' do
+    it 'returns true if user has a following relationship with another user' do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      Fabricate(:relationship, user: user1, follower: user2)
+      expect(user2.follows?(user1)).to be_truthy
+    end
+    
+    it 'returns false if user does not have a following relationship with another user' do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      expect(user2.follows?(user1)).to be_falsy
+    end
+  end
 end

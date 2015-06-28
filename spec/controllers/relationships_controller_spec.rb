@@ -13,6 +13,37 @@ describe RelationshipsController do
     
   end
   
+  describe 'POST create' do
+    
+    let(:user1) { Fabricate(:user) }
+    
+    it_behaves_like 'requires sign in' do
+      let(:action) { post :create }
+    end
+    
+    it 'creates the following relationship' do
+      post :create, user_id: user1.id
+      expect(Relationship.count).to eq(1)
+    end
+    
+    it 'redirects to user#show' do
+      post :create, user_id: user1.id
+      expect(response).to redirect_to user_path(user1)
+    end
+    
+    it 'does not create a relationship if current user already follows user' do
+      Fabricate(:relationship, user: user1, follower: current_user)
+      post :create, user_id: user1.id
+      expect(Relationship.count).to eq(1)
+    end
+    
+    it 'does not create a relationship if current user tries to follow self' do
+      post :create, user_id: current_user.id
+      expect(Relationship.count).to eq(0)
+    end
+    
+  end
+  
   describe 'DELETE :destroy' do
     
     let(:user1) { Fabricate(:user) }

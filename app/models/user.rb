@@ -17,4 +17,8 @@ class User < ActiveRecord::Base
     end
   end
   
+  def follows?(another_user)
+    following_relationships.map(&:user).include?(another_user)
+  end
+  
 end
