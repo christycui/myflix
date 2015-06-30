@@ -21,4 +21,4 @@
             %li
               = link_to 'Account', user_path(current_user)
               %a(href="#") Plan and Billing
-              = link_to "Sign Out", logout_path
+              = link_to "Sign Out", logout_path, method: :delete
