@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_secure_password validations: false
+  before_create :generate_token
   
   has_many :reviews
   has_many :queue_items, -> { order("position") }
@@ -19,6 +20,15 @@ class User < ActiveRecord::Base
   
   def follows?(another_user)
     following_relationships.map(&:user).include?(another_user)
+  end
+  
+  def to_param
+    token
+  end
+  
+  private
+  def generate_token
+    self.token = SecureRandom.urlsafe_base64
   end
   
 end
