@@ -14,11 +14,13 @@ class PasswordResetController < ApplicationController
   
   def enter_new_password
     @user = User.find_by_token params[:id]
+    render 'invalid_token' unless @user
   end
   
   def reset_password
     @user = User.find_by_token params[:token]
     @user.password = params[:new_password]
+    @user.generate_new_token
     redirect_to login_path
   end
 end

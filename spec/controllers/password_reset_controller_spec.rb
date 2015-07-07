@@ -24,10 +24,15 @@ describe PasswordResetController do
   end
   
   describe 'GET enter_new_password' do
-    it 'sets @token variable' do
+    it 'sets @user variable if token exists' do
       user = Fabricate(:user)
       get :enter_new_password, id: user.token
-      expect(assigns(:token)).to eq(user.token)
+      expect(assigns(:user)).to eq(user)
+    end
+
+    it 'redirects to invalid_token page if token does not exist' do
+      get :enter_new_password, id: 'abc'
+      expect(response).to render_template 'invalid_token'
     end
   end
   
@@ -41,10 +46,15 @@ describe PasswordResetController do
     it 'updates user password' do
       user = Fabricate(:user)
       post :reset_password, token: user.token, new_password: 'new_pw'
-      expect(user.reload.password).to eq('new_pw')
+      expect(user.reload.authenticate('new_pw')).to be_truthy
     end
     
-    it 'generates a new token for the user'
+    it 'generates a new token for the user' do
+      user = Fabricate(:user)
+      old_token = user.token
+      post :reset_password, token: old_token, new_password: 'new_pw'
+      expect(user.reload.token).not_to eq(old_token)
+    end
     
     it 'redirects to login_path' do
       user = Fabricate(:user)

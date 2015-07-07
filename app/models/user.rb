@@ -25,6 +25,10 @@ class User < ActiveRecord::Base
   def to_param
     token
   end
+
+  def generate_new_token
+    generate_token
+  end
   
   private
   def generate_token

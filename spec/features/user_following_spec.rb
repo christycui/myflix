@@ -15,11 +15,12 @@ feature 'User following' do
     click_link 'People'
     expect(page).to have_link(another_user.full_name)
     
-    unfollow
+    unfollow(user, another_user)
     expect(page).not_to have_link(another_user.full_name)
   end
   
-  def unfollow
-    find("a[rel='nofollow']").click
+  def unfollow(user, another_user)
+    relationship = Relationship.where(user: another_user, follower: user).first
+    find("a[href='/relationships/#{relationship.id}']").click
   end
 end
