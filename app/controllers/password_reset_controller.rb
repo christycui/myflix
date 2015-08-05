@@ -3,7 +3,7 @@ class PasswordResetController < ApplicationController
   end
   
   def confirm_password_reset
-    user = User.find_by_email_address params[:email]
+    user = User.find_by(email_address: params[:email])
     if user
       AppMailer.password_reset(user).deliver
     else
@@ -13,12 +13,12 @@ class PasswordResetController < ApplicationController
   end
   
   def enter_new_password
-    @user = User.find_by_token params[:token]
+    @user = User.find_by(token: params[:token])
     redirect_to invalid_token_path unless @user
   end
   
   def reset_password
-    @user = User.find_by_token params[:token]
+    @user = User.find_by(token: params[:token])
     if @user
       @user.password = params[:new_password]
       @user.generate_new_token

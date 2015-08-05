@@ -17,13 +17,13 @@ describe PasswordResetController do
     context 'with existing user email' do
       after { ActionMailer::Base.deliveries.clear }
       
-      it 'sends an email to user if regiestered' do
+      it 'sends an email to user' do
         user = Fabricate(:user)
         post :confirm_password_reset, email: user.email_address
         expect(ActionMailer::Base.deliveries.last.to).to eq([user.email_address])
       end
       
-      it 'sends password reset email if user is registered' do
+      it 'sends password reset email' do
         user = Fabricate(:user)
         post :confirm_password_reset, email: user.email_address
         expect(ActionMailer::Base.deliveries.last.body).to include('reset your password')
@@ -31,7 +31,7 @@ describe PasswordResetController do
     end
 
     context 'with non-existing email' do
-      it 'does not send an email if user is not registered' do
+      it 'does not send an email' do
         post :confirm_password_reset, email: 'example@example.com'
         expect(ActionMailer::Base.deliveries).to be_empty
       end

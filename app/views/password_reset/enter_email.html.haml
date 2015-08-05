@@ -1,7 +1,7 @@
 %section.forgot_password.container
   .row
     .col-sm-10.col-bg-offset-1
-      %form.sign_in{action: '/confirm_password_reset', method: 'post'}
+      = form_tag '/confirm_password_reset', method: 'post', class: 'sign-in' do
         %header
           %h1 Forgot Password?
           %p We will send you an email with a link that you can use to reset your password.
@@ -9,6 +9,6 @@
           %label Email Address
           .row
             .col-sm-4
-              %input.form-control{name: 'email'}(type="email")
+              = email_field_tag :email, nil, class: 'form-control'
         .form-group.action
-          %input(type="submit" value="Send Email" class="btn btn-default")
+          = submit_tag 'Send Email', class: 'btn btn-default'

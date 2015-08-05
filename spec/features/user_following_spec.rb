@@ -16,7 +16,7 @@ feature 'User following' do
     expect(page).to have_link(another_user.full_name)
     
     unfollow(user, another_user)
-    expect(page).not_to have_link(another_user.full_name)
+    expect(page).to have_no_link(another_user.full_name)
   end
   
   def unfollow(user, another_user)
