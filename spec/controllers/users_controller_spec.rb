@@ -23,6 +23,26 @@ describe UsersController do
       end
     end
     
+    context "sending email" do
+      
+      after { ActionMailer::Base.deliveries.clear }
+      
+      it 'sends an email to new user when input is valid' do
+        post :create, user: Fabricate.attributes_for(:user, email_address: 'example@example.com')
+        expect(ActionMailer::Base.deliveries.last.to).to eq(['example@example.com'])
+      end
+      
+      it "sends email containing user's name with valid input" do
+        post :create, user: Fabricate.attributes_for(:user, full_name: 'J')
+        expect(ActionMailer::Base.deliveries.last.body).to include('J')
+      end
+      
+      it 'does not send out an email with invalid input' do
+        post :create, user: Fabricate.attributes_for(:user, email_address: '')
+        expect(ActionMailer::Base.deliveries).to be_empty
+      end
+    end
+    
     context "when input is invalid" do
       before do
         post :create, user: {email_address: "christycui@example.com", full_name: "Christy Cui"}
@@ -39,6 +59,19 @@ describe UsersController do
       it "sets @user variable" do
         expect(assigns(:user)).to be_instance_of(User)
       end
+    end
+  end
+  
+  describe "GET show" do
+    it_behaves_like "requires sign in" do
+      let(:action) { get :show, id: 1 }
+    end
+    
+    it "sets @user variable" do
+      set_current_user
+      user = Fabricate(:user)
+      get :show, id: user
+      expect(assigns(:user)).to eq(user)
     end
   end
 end
