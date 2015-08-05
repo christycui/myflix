@@ -12,7 +12,7 @@ Myflix::Application.routes.draw do
     resources :reviews, only: [:create]
   end
   resources :categories, only: [:show]
-  resources :users, only: [:create, :show]
+  resources :users, only: [:create, :show, :update]
   get "/people", to: "relationships#index"
   resources :relationships, only: [:create, :destroy]
   resources :sessions, only: [:create]
@@ -21,7 +21,7 @@ Myflix::Application.routes.draw do
   post "/update_queue", to: "queue_items#update_queue"
   get '/forgot_password', to: "password_reset#enter_email"
   post '/confirm_password_reset', to: "password_reset#confirm_password_reset"
-  get '/password_reset/:token', to: "password_reset#enter_new_password"
+  get '/enter_new_password', to: "password_reset#enter_new_password"
   post '/password_reset', to: "password_reset#reset_password"
   get '/invalid_token', to: "password_reset#invalid_token"
 

@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.new(params.require(:user).permit(:email_address, :password, :full_name))
+    @user = User.new(user_params)
     if @user.save
       AppMailer.welcome_new_user(@user).deliver
       flash[:notice] = "Your account is created!"
@@ -16,7 +16,22 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find_by_token params[:id]
+    @user = User.find_by(token: params[:id])
+  end
+
+  def update
+    @user = User.find_by(token: params[:id])
+    if @user.update(user_params)
+      flash[:notice] = "Your account is updated."
+    else
+      flash[:error] = "Something went wrong. Unsuccessful update."
+    end
+    redirect_to login_path
+  end
+
+  private
+  def user_params
+    params.require(:user).permit(:email_address, :password, :full_name)
   end
   
 end

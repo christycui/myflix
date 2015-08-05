@@ -74,4 +74,20 @@ describe UsersController do
       expect(assigns(:user)).to eq(user)
     end
   end
+
+  describe 'PATCH update' do
+
+    it 'updates @user variable' do
+      user = Fabricate(:user)
+      patch :update, id: user, user: {password: 'new_pw'}
+      expect(user.reload.authenticate('new_pw')).to equal(user)
+    end
+
+    it 'redirects to user page' do
+      set_current_user
+      user = Fabricate(:user)
+      patch :update, id: user, user: {password: 'new_pw'}
+      expect(response).to redirect_to login_path
+    end
+  end
 end
