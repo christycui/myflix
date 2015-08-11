@@ -23,7 +23,7 @@ Myflix::Application.routes.draw do
   post '/confirm_password_reset', to: "password_reset#confirm_password_reset"
   get '/enter_new_password', to: "password_reset#enter_new_password"
   post '/password_reset', to: "password_reset#reset_password"
-  get '/invalid_token', to: "password_reset#invalid_token"
+  get '/invalid_token', to: "pages#invalid_token"
 
   resources :invitations, only: [:new, :create]
 end

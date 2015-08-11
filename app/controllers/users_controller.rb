@@ -2,6 +2,12 @@ class UsersController < ApplicationController
   before_action :require_user, only: [:show]
   def new
     @user = User.new
+    if params[:token] == nil
+      redirect_to invalid_token_path
+    elsif params[:token]
+      @invitation = Invitation.find_by(invitation_token: params[:token])
+      @user.email_address = @invitation.email
+    end
   end
   
   def create
@@ -9,6 +15,7 @@ class UsersController < ApplicationController
     if @user.save
       AppMailer.welcome_new_user(@user).deliver
       flash[:notice] = "Your account is created!"
+      handle_invitation
       redirect_to login_path
     else
       render 'new'
@@ -32,6 +39,16 @@ class UsersController < ApplicationController
   private
   def user_params
     params.require(:user).permit(:email_address, :password, :full_name)
+  end
+
+  def handle_invitation
+    if params[:token]
+      invitation = Invitation.find_by(invitation_token: params[:token])
+      inviter = invitation.user
+      Relationship.create(user: @user, follower: inviter)
+      Relationship.create(user: inviter, follower: @user)
+      invitation.update_column(:invitation_token, nil)
+    end
   end
   
 end
