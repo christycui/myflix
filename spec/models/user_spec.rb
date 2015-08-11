@@ -11,6 +11,10 @@ describe User do
   it { should have_many(:followers).through(:relationships) }
   it { should have_many(:following_relationships).class_name('Relationship').with_foreign_key(:follower_id) }
   it { should have_many(:invitations) }
+
+  it_behaves_like 'tokenable' do
+    let(:object) { Fabricate(:user) }
+  end
   
   describe '#follows?' do
     it 'returns true if user has a following relationship with another user' do

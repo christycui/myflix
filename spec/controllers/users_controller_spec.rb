@@ -11,13 +11,13 @@ describe UsersController do
     context "when a token is present" do
       it "sets @user's email as invitation recipient's email" do
         invitation = Fabricate(:invitation)
-        get :new, token: invitation.invitation_token
+        get :new, token: invitation.token
         expect(assigns(:user).email_address).to eq(invitation.email)
       end
 
       it "sets @invitation variable" do
         invitation = Fabricate(:invitation)
-        get :new, token: invitation.invitation_token
+        get :new, token: invitation.token
         expect(assigns(:invitation)).to eq(invitation)
       end
 
@@ -33,7 +33,7 @@ describe UsersController do
       let(:invitation) { Fabricate(:invitation, user: inviter) }
 
       before do
-        post :create, user: Fabricate.attributes_for(:user, full_name: 'Alice'), token: invitation.invitation_token
+        post :create, user: Fabricate.attributes_for(:user, full_name: 'Alice'), token: invitation.token
       end
 
       it 'makes new user follows inviter' do
@@ -46,7 +46,7 @@ describe UsersController do
       end
 
       it "expires the invitation token" do
-        expect(invitation.reload.invitation_token).to be_nil
+        expect(invitation.reload.token).to be_nil
       end
     end
 

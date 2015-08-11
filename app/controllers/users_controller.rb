@@ -5,7 +5,7 @@ class UsersController < ApplicationController
     if params[:token] == nil
       redirect_to invalid_token_path
     elsif params[:token]
-      @invitation = Invitation.find_by(invitation_token: params[:token])
+      @invitation = Invitation.find_by(token: params[:token])
       @user.email_address = @invitation.email
     end
   end
@@ -43,11 +43,11 @@ class UsersController < ApplicationController
 
   def handle_invitation
     if params[:token]
-      invitation = Invitation.find_by(invitation_token: params[:token])
+      invitation = Invitation.find_by(token: params[:token])
       inviter = invitation.user
       Relationship.create(user: @user, follower: inviter)
       Relationship.create(user: inviter, follower: @user)
-      invitation.update_column(:invitation_token, nil)
+      invitation.update_column(:token, nil)
     end
   end
   

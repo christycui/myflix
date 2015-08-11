@@ -3,6 +3,6 @@
   %body
     %p Hello #{@invitation.friend_name}, this is an invite from #{@invitation.user.full_name} to join Myflix: 
     %p= @invitation.message
-    %p Check us out and register #{link_to 'here', register_url(token: @invitation.invitation_token)}.
+    %p Check us out and register #{link_to 'here', register_url(token: @invitation.token)}.
     %footer
       &copy 2013 MyFLiX
