@@ -6,9 +6,3 @@ shared_examples "requires sign in" do
   end
 
 end
-
-shared_examples "tokenable" do
-  it 'generates a random token when user is created' do
-    expect(object.token).to be_present
-  end
-end

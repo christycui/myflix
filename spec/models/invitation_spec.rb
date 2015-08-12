@@ -7,7 +7,8 @@ describe Invitation do
   it { should validate_uniqueness_of(:email) }
   it { should validate_presence_of(:message) }
 
-  it_behaves_like 'tokenable' do
-    let(:object) { Fabricate(:invitation) }
+  it 'generates new token when invitation is created' do
+    invitation = Fabricate(:invitation)
+    expect(invitation.token).to be_present
   end
 end

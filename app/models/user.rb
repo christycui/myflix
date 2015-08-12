@@ -23,10 +23,6 @@ class User < ActiveRecord::Base
   def follows?(another_user)
     following_relationships.map(&:user).include?(another_user)
   end
-  
-  def to_param
-    token
-  end
 
   def generate_new_token
     generate_token

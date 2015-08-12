@@ -23,11 +23,11 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find_by(token: params[:id])
+    @user = User.find_by(id: params[:id])
   end
 
   def update
-    @user = User.find_by(token: params[:id])
+    @user = User.find_by(id: params[:id])
     if @user.update(user_params)
       flash[:notice] = "Your account is updated."
     else

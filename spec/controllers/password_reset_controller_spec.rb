@@ -15,18 +15,20 @@ describe PasswordResetController do
     end
 
     context 'with existing user email' do
+      let(:user) { Fabricate(:user) }
+      before { post :confirm_password_reset, email: user.email_address }
       after { ActionMailer::Base.deliveries.clear }
       
       it 'sends an email to user' do
-        user = Fabricate(:user)
-        post :confirm_password_reset, email: user.email_address
         expect(ActionMailer::Base.deliveries.last.to).to eq([user.email_address])
       end
       
       it 'sends password reset email' do
-        user = Fabricate(:user)
-        post :confirm_password_reset, email: user.email_address
         expect(ActionMailer::Base.deliveries.last.body).to include('reset your password')
+      end
+
+      it 'generates token for user' do
+        expect(user.reload.token).to be_present
       end
     end
 
@@ -71,15 +73,15 @@ describe PasswordResetController do
       
       it 'updates user password' do
         user = Fabricate(:user)
-        post :reset_password, token: user.token, new_password: 'new_pw'
+        post :confirm_password_reset, email: user.email_address
+        post :reset_password, token: user.reload.token, new_password: 'new_pw'
         expect(user.reload.authenticate('new_pw')).to be_truthy
       end
       
-      it 'generates a new token for the user' do
+      it 'expires token' do
         user = Fabricate(:user)
-        old_token = user.token
-        post :reset_password, token: old_token, new_password: 'new_pw'
-        expect(user.reload.token).not_to eq(old_token)
+        post :reset_password, token: user.token, new_password: 'new_pw'
+        expect(user.reload.token).to be_nil
       end
       
       it 'redirects to login_path' do

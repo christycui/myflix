@@ -5,6 +5,8 @@ class PasswordResetController < ApplicationController
   def confirm_password_reset
     user = User.find_by(email_address: params[:email])
     if user
+      user.generate_new_token
+      user.save
       AppMailer.password_reset(user).deliver
     else
       flash[:error] = params[:email].nil? ? 'Please enter a user email.' : 'This email was not found in the database.'
@@ -21,8 +23,8 @@ class PasswordResetController < ApplicationController
     @user = User.find_by(token: params[:token])
     if @user
       @user.password = params[:new_password]
-      @user.generate_new_token
       @user.save
+      @user.remove_token!
       redirect_to login_path
     else
       redirect_to invalid_token_path

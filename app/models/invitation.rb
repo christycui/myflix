@@ -1,5 +1,6 @@
 class Invitation < ActiveRecord::Base
   include Tokenable
+  before_create :generate_token
   belongs_to :user
 
   validates_presence_of :friend_name, :email, :message

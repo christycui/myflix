@@ -12,7 +12,7 @@ class InvitationsController < ApplicationController
       flash[:notice] = 'Your invitation was sent.'
       redirect_to new_invitation_path
     else
-      flash[:error] = 'Your invitation was not sent. Please check input fields.'
+      flash.now[:error] = 'Your invitation was not sent. Please check input fields.'
       render 'new'
     end
   end
