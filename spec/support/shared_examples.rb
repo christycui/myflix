@@ -4,4 +4,5 @@ shared_examples "requires sign in" do
     action
     expect(response).to redirect_to login_path
   end
+
 end

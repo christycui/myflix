@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'User reset password' do
+feature 'User resets password' do
   scenario 'user forgot password' do
     user = Fabricate(:user)
 
@@ -9,10 +9,14 @@ feature 'User reset password' do
     expect(page).to have_content('Forgot Password?')
     fill_in "email", with: user.email_address
     click_button 'Send Email'
-    expect(ActionMailer::Base.deliveries.last.to).to eq([user.email_address])
-    visit "/password_reset/#{user.token}"
+
+    open_email(user.email_address)
+    current_email.click_link('link')
     fill_in 'user[password]', with: 'new_pw'
-    sign_in(user)
+    click_button 'Reset Password'
+    fill_in("email_address", with: user.email_address)
+    fill_in("password", with: 'new_pw')
+    click_button('Sign In')
     expect(page).to have_content(user.full_name)
   end
 end

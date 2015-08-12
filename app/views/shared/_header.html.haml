@@ -19,6 +19,7 @@
             %b.caret
           %ul.dropdown-menu(role="menu" aria-labelledby="dlabel")
             %li
+              = link_to 'Invite a friend', new_invitation_path
               = link_to 'Account', user_path(current_user)
               %a(href="#") Plan and Billing
-              = link_to "Sign Out", logout_path, method: :delete
+              = link_to "Sign Out", logout_path

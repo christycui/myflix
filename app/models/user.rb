@@ -1,12 +1,14 @@
 class User < ActiveRecord::Base
+  include Tokenable
+
   has_secure_password validations: false
-  before_create :generate_token
   
   has_many :reviews
   has_many :queue_items, -> { order("position") }
   has_many :relationships
   has_many :followers, through: :relationships
   has_many :following_relationships, class_name: "Relationship", foreign_key: :follower_id
+  has_many :invitations
   
   validates :email_address, presence: true, uniqueness: true
   validates :password, presence: true, on: :create
@@ -21,18 +23,9 @@ class User < ActiveRecord::Base
   def follows?(another_user)
     following_relationships.map(&:user).include?(another_user)
   end
-  
-  def to_param
-    token
-  end
 
   def generate_new_token
     generate_token
-  end
-  
-  private
-  def generate_token
-    self.token = SecureRandom.urlsafe_base64
   end
   
 end

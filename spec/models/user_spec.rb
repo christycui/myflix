@@ -10,6 +10,7 @@ describe User do
   it { should have_many(:relationships) }
   it { should have_many(:followers).through(:relationships) }
   it { should have_many(:following_relationships).class_name('Relationship').with_foreign_key(:follower_id) }
+  it { should have_many(:invitations) }
   
   describe '#follows?' do
     it 'returns true if user has a following relationship with another user' do
