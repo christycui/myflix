@@ -16,6 +16,7 @@ gem 'faker', '~> 1.4.3'
 gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim'
+gem 'unicorn'
 
 group :development do
   gem 'thin'
