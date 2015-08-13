@@ -8,7 +8,7 @@ class InvitationsController < ApplicationController
     @invitation = Invitation.new(params.require(:invitation).permit(:friend_name, :email, :message))
     @invitation.user = current_user
     if @invitation.save
-      AppMailer.invitation(@invitation).deliver
+      AppMailer.delay.invitation(@invitation)
       flash[:notice] = 'Your invitation was sent.'
       redirect_to new_invitation_path
     else

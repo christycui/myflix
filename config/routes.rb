@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Myflix::Application.routes.draw do
   root to: 'pages#front'
   get '/register', to: 'users#new'
@@ -26,4 +28,6 @@ Myflix::Application.routes.draw do
   get '/invalid_token', to: "pages#invalid_token"
 
   resources :invitations, only: [:new, :create]
+
+  mount Sidekiq::Web, at: '/sidekiq'
 end
