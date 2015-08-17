@@ -7,13 +7,13 @@ deployment:
     commands:
       - heroku maintenance:on --app myflix-cui
       - heroku pg:backups capture --app myflix-cui
-      - git push -f git@heroku.com:myflix-cui.git $CIRCLE_SHA1:refs/heads/master
+      - git push git@heroku.com:myflix-cui.git $CIRCLE_SHA1:refs/heads/master
       - heroku run rake db:migrate --app myflix-cui
       - heroku maintenance:off --app myflix-cui
   staging:
     branch: staging
     commands:
       - heroku maintenance:on --app myflix-cui-staging
-      - git push git@heroku.com:myflix-cui-staging.git $CIRCLE_SHA1:refs/heads/master
+      - git push -f git@heroku.com:myflix-cui-staging.git $CIRCLE_SHA1:refs/heads/master
       - heroku run rake db:migrate --app myflix-cui-staging
       - heroku maintenance:off --app myflix-cui-staging
