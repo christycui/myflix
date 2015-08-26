@@ -16,7 +16,7 @@ Myflix::Application.routes.draw do
   resources :categories, only: [:show]
   resources :users, only: [:create, :show, :update]
   namespace :admin do
-    resources :videos, only: [:new]
+    resources :videos, only: [:new, :create]
   end
   get "/people", to: "relationships#index"
   resources :relationships, only: [:create, :destroy]
