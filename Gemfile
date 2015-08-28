@@ -20,6 +20,7 @@ gem 'unicorn'
 gem 'sentry-raven'
 gem 'carrierwave'
 gem 'mini_magick'
+gem 'carrierwave-aws'
 
 group :development do
   gem 'thin'
@@ -44,10 +45,5 @@ end
 
 group :production do
   gem 'rails_12factor'
-  gem 'carrierwave-aws'
-end
-
-group :staging do
-  gem 'carrierwave-aws'
 end
 
