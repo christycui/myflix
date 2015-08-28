@@ -46,7 +46,7 @@ class LargeCoverUploader < CarrierWave::Uploader::Base
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
-    original_filename.split('.').first + '.jpg'
+    original_filename.split('.').first + '.jpg' if original_filename
   end
 
   private
