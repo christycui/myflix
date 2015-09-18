@@ -13,6 +13,7 @@ gem 'pg'
 gem 'bcrypt', '~> 3.1.5'
 gem 'fabrication', '~> 2.12.2'
 gem 'faker', '~> 1.4.3'
+gem 'celluloid', '0.16.0'
 gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim'
@@ -23,7 +24,6 @@ gem 'mini_magick'
 gem 'carrierwave-aws'
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'figaro'
-gem 'celluloid', '~> 0.16.0'
 
 group :development do
   gem 'thin'
