@@ -23,6 +23,7 @@ gem 'mini_magick'
 gem 'carrierwave-aws'
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'figaro'
+gem 'celluloid', '~> 0.16.0'
 
 group :development do
   gem 'thin'

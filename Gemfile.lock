@@ -270,6 +270,7 @@ DEPENDENCIES
   capybara-email!
   carrierwave
   carrierwave-aws
+  celluloid (~> 0.16.0)
   coffee-rails
   database_cleaner (= 1.2.0)
   fabrication (~> 2.12.2)
