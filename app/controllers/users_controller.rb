@@ -16,6 +16,14 @@ class UsersController < ApplicationController
       AppMailer.welcome_new_user(@user).deliver
       flash[:notice] = "Your account is created!"
       handle_invitation
+      Stripe.api_key = ENV['stripe_secret_key']
+      charge = Stripe::Charge.create(
+        :amount => 999, # amount in cents
+        :currency => "usd",
+        :source => params[:stripeToken],
+        :description => "Monthly Subscription for @{@user.email_address}"
+      )
+      flash[:success] = "Payment successful. Please log in with your credentials."
       redirect_to login_path
     else
       render 'new'
