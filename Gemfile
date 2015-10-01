@@ -44,6 +44,8 @@ group :test do
   gem 'capybara'
   gem 'launchy'
   gem 'capybara-email', github: 'dockyard/capybara-email'
+  gem 'webmock'
+  gem 'vcr'
 end
 
 group :production do
