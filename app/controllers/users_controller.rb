@@ -22,13 +22,14 @@ class UsersController < ApplicationController
         @user.save
         handle_invitation
         AppMailer.welcome_new_user(@user).deliver
-        flash[:success] = "Payment successful. Please log in with your credentials."
+        flash[:success] = "Account created. Please log in with your credentials."
         redirect_to login_path
       else
         flash[:error] = charge.error_message
         render 'new'
       end
     else
+      flash[:error] = "Please check input fields."
       render 'new'
     end
   end
