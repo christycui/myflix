@@ -28,12 +28,13 @@ describe UsersController do
     end
   end
   describe "POST create" do
-    before { StripeWrapper::Charge.stub(:create) }
     context "when there is a token" do
       let(:inviter) { Fabricate(:user) }
       let(:invitation) { Fabricate(:invitation, user: inviter) }
+      let(:charge) { double('charge', successful?: true) }
 
       before do
+        StripeWrapper::Charge.should_receive(:create).and_return(charge)
         post :create, user: Fabricate.attributes_for(:user, full_name: 'Alice'), token: invitation.token
       end
 
@@ -51,8 +52,11 @@ describe UsersController do
       end
     end
 
-    context "when input is valid" do
+    context "when perfonal info and card is valid" do
+      let(:charge) { double('charge', successful?: true) }
+
       before do
+        StripeWrapper::Charge.stub(:create).and_return(charge)
         post :create, user: Fabricate.attributes_for(:user)
       end
       
@@ -65,30 +69,33 @@ describe UsersController do
       end
     end
     
-    context "sending email" do
-      
-      after { ActionMailer::Base.deliveries.clear }
-      
-      it 'sends an email to new user when input is valid' do
-        post :create, user: Fabricate.attributes_for(:user, email_address: 'example@example.com')
-        expect(ActionMailer::Base.deliveries.last.to).to eq(['example@example.com'])
+    context "when personal info is valid but card is invalid" do
+      let(:charge) { double('charge', successful?: false, error_message: 'Your card was declined.') }
+
+      before do
+        StripeWrapper::Charge.should_receive(:create).and_return(charge)
+        post :create, user: Fabricate.attributes_for(:user)
       end
-      
-      it "sends email containing user's name with valid input" do
-        post :create, user: Fabricate.attributes_for(:user, full_name: 'J')
-        expect(ActionMailer::Base.deliveries.last.body).to include('J')
+
+      it "does not create a user" do
+        expect(User.count).to eq(0)
       end
-      
-      it 'does not send out an email with invalid input' do
-        post :create, user: Fabricate.attributes_for(:user, email_address: '')
-        expect(ActionMailer::Base.deliveries).to be_empty
+
+      it "renders new template" do
+        expect(response).to render_template 'new'
+      end
+
+      it "sets the flash error" do
+        expect(flash[:error]).to be_present
       end
     end
-    
-    context "when input is invalid" do
+
+    context "when personal info is invalid" do
       before do
-        post :create, user: {email_address: "christycui@example.com", full_name: "Christy Cui"}
+        post :create, user: {email_address: "christycui@example.com", full_name: "Christy Cui"}, stripeToken: '1'
       end
+      
+      after { ActionMailer::Base.deliveries.clear }
       
       it "does not create a user when input is invalid" do
         expect(User.count).to eq(0)
@@ -101,7 +108,34 @@ describe UsersController do
       it "sets @user variable" do
         expect(assigns(:user)).to be_instance_of(User)
       end
+
+      it "does not charge the card" do
+        StripeWrapper::Charge.should_not_receive(:create)
+      end
+
+      it 'does not send out an email with invalid input' do
+        expect(ActionMailer::Base.deliveries).to be_empty
+      end
     end
+
+    context "sending email" do
+      let(:charge) { double('charge', successful?: true) }
+
+      before { StripeWrapper::Charge.should_receive(:create).and_return(charge) }
+      after { ActionMailer::Base.deliveries.clear }
+      
+      it 'sends an email to new user when input is valid' do
+        post :create, user: Fabricate.attributes_for(:user, email_address: 'example@example.com')
+        expect(ActionMailer::Base.deliveries.last.to).to eq(['example@example.com'])
+      end
+      
+      it "sends email containing user's name with valid input" do
+        post :create, user: Fabricate.attributes_for(:user, full_name: 'J')
+        expect(ActionMailer::Base.deliveries.last.body).to include('J')
+      end
+    end
+    
+
   end
   
   describe "GET show" do
