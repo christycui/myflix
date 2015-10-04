@@ -1,0 +1,1 @@
+Stripe.api_key = Rails.env.production? ? ENV['STRIPE_LIVE_SECRET_KEY'] : ENV['stripe_secret_key']
