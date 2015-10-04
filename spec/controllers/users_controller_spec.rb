@@ -28,6 +28,7 @@ describe UsersController do
     end
   end
   describe "POST create" do
+    before { StripeWrapper::Charge.stub(:create) }
     context "when there is a token" do
       let(:inviter) { Fabricate(:user) }
       let(:invitation) { Fabricate(:invitation, user: inviter) }

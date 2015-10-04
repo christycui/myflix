@@ -124,7 +124,7 @@ describe QueueItemsController do
       end
       
       it "does not change the queue items" do
-        expect(current_user.queue_items).to eq([queue_item1, queue_item2])
+        expect(current_user.queue_items).to match_array([queue_item1, queue_item2])
       end
     end
     

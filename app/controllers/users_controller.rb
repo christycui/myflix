@@ -13,14 +13,13 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      AppMailer.welcome_new_user(@user).deliver
-      flash[:notice] = "Your account is created!"
       handle_invitation
       charge = StripeWrapper::Charge.create(
         :amount => 999,
         :source => params[:stripeToken],
         :description => "Monthly Subscription for @{@user.email_address}"
       )
+      AppMailer.welcome_new_user(@user).deliver
       flash[:success] = "Payment successful. Please log in with your credentials."
       redirect_to login_path
     else
