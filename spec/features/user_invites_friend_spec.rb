@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'user invites friend' do
-  scenario 'user successfully invites friend and friend registers account' do
+  scenario 'user successfully invites friend and friend registers account', {vcr: true, js: true} do
     user = Fabricate(:user)
     sign_in(user)
 
@@ -28,6 +28,10 @@ feature 'user invites friend' do
     current_email.click_link('here')
     fill_in "Password", with: 'password'
     fill_in "user[full_name]", with: 'Alice'
+    fill_in "credit_card_number", with: '4242424242424242'
+    fill_in "security_code", with: '123'
+    select "10 - October", from: 'date_month'
+    select "2017", from: 'date_year'
     click_button 'Sign Up'
   end
 

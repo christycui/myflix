@@ -112,7 +112,7 @@ describe QueueItemsController do
     
     context "with invalid input" do
       before do
-        post :update_queue, queue_items: [{id: queue_item1.id, position: 2}, {id: queue_item2.id, position: 1.2}]
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 2.2}, {id: queue_item2.id, position: 1.2}]
       end
       
       it "redirects to my queue page" do
