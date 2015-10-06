@@ -12,4 +12,8 @@ class Video < ActiveRecord::Base
     return [] if str.blank?
     where("lower(title) LIKE ?", "%#{str.downcase}%").order("created_at DESC")
   end
+
+  def rating
+    reviews.average(:rating).round(1) if reviews.average(:rating)
+  end
 end

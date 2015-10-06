@@ -24,6 +24,7 @@ gem 'mini_magick'
 gem 'carrierwave-aws'
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'figaro'
+gem 'draper', '~> 1.3'
 
 group :development do
   gem 'thin'
