@@ -16,7 +16,7 @@ module StripeWrapper
     end
 
     def successful?
-      !error_message.present?
+      error_message.blank?
     end
   end
 end

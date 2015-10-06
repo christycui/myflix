@@ -34,7 +34,7 @@ describe UsersController do
       let(:charge) { double('charge', successful?: true) }
 
       before do
-        StripeWrapper::Charge.should_receive(:create).and_return(charge)
+        allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
         post :create, user: Fabricate.attributes_for(:user, full_name: 'Alice'), token: invitation.token
       end
 
@@ -56,7 +56,7 @@ describe UsersController do
       let(:charge) { double('charge', successful?: true) }
 
       before do
-        StripeWrapper::Charge.stub(:create).and_return(charge)
+        allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
         post :create, user: Fabricate.attributes_for(:user)
       end
       

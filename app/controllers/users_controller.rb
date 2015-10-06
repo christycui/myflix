@@ -25,11 +25,11 @@ class UsersController < ApplicationController
         flash[:success] = "Account created. Please log in with your credentials."
         redirect_to login_path
       else
-        flash[:error] = charge.error_message
+        flash.now[:error] = charge.error_message
         render 'new'
       end
     else
-      flash[:error] = "Please check input fields."
+      flash.now[:error] = "Please check input fields."
       render 'new'
     end
   end
