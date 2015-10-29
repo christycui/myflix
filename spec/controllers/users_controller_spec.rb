@@ -91,7 +91,10 @@ describe UsersController do
     end
 
     context "when personal info is invalid" do
+      let(:charge) { double('charge', successful?: true) }
+
       before do
+        allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
         post :create, user: {email_address: "christycui@example.com", full_name: "Christy Cui"}, stripeToken: '1'
       end
       
