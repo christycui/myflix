@@ -63,20 +63,22 @@ describe UserSignup do
 
       before do
         allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
-        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1', nil)
       end
       
       after { ActionMailer::Base.deliveries.clear }
       
       it "does not create a user when input is invalid" do
+        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1', nil)
         expect(User.count).to eq(0)
       end
 
       it "does not charge the card" do
         StripeWrapper::Charge.should_not_receive(:create)
+        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1', nil)
       end
 
       it 'does not send out an email with invalid input' do
+        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1', nil)
         expect(ActionMailer::Base.deliveries).to be_empty
       end
     end

@@ -6,28 +6,26 @@ class UserSignup
   end
 
   def sign_up(stripeToken, invitation_token)
-    charge = StripeWrapper::Charge.create(
+    if @user.valid?
+      charge = StripeWrapper::Charge.create(
       :amount => 999,
       :source => stripeToken,
       :description => "Monthly Subscription for @{@user.email_address}"
     )
-    if @user.valid?
       if charge.successful?
         @user.save
         handle_invitation(invitation_token)
         AppMailer.welcome_new_user(@user).deliver
         @status = :success
-        self
       else
         @status = :fail
         @error_message = charge.error_message
-        self
       end
     else
       @status = :fail
       @error_message = "Please check input fields."
-      self
     end
+    self
   end
 
   def charge
