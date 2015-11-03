@@ -28,77 +28,32 @@ describe UsersController do
     end
   end
   describe "POST create" do
-    context "when there is a token" do
-      let(:inviter) { Fabricate(:user) }
-      let(:invitation) { Fabricate(:invitation, user: inviter) }
-
-      before do
-        post :create, user: Fabricate.attributes_for(:user, full_name: 'Alice'), token: invitation.token
-      end
-
-      it 'makes new user follows inviter' do
-        expect(inviter.reload.followers.last.full_name).to eq('Alice')
-      end
-
-      it 'makes inviter follows new user' do
-        alice = User.find_by(full_name: 'Alice')
-        expect(alice.followers.last).to eq(inviter)
-      end
-
-      it "expires the invitation token" do
-        expect(invitation.reload.token).to be_nil
-      end
-    end
-
-    context "when input is valid" do
-      before do
-        post :create, user: Fabricate.attributes_for(:user)
-      end
-      
-      it "create a user" do
-        expect(User.count).to eq(1)
-      end
-      
+    context "successful user signup" do
       it "redirects to login path" do
+        result = double('signup_result', successful?: true)
+        UserSignup.any_instance.should_receive(:sign_up).and_return(result)
+        post :create, user: Fabricate.attributes_for(:user)
         expect(response).to redirect_to login_path
       end
     end
     
-    context "sending email" do
-      
-      after { ActionMailer::Base.deliveries.clear }
-      
-      it 'sends an email to new user when input is valid' do
-        post :create, user: Fabricate.attributes_for(:user, email_address: 'example@example.com')
-        expect(ActionMailer::Base.deliveries.last.to).to eq(['example@example.com'])
-      end
-      
-      it "sends email containing user's name with valid input" do
-        post :create, user: Fabricate.attributes_for(:user, full_name: 'J')
-        expect(ActionMailer::Base.deliveries.last.body).to include('J')
-      end
-      
-      it 'does not send out an email with invalid input' do
-        post :create, user: Fabricate.attributes_for(:user, email_address: '')
-        expect(ActionMailer::Base.deliveries).to be_empty
-      end
-    end
-    
-    context "when input is invalid" do
+    context "signup failure" do
       before do
-        post :create, user: {email_address: "christycui@example.com", full_name: "Christy Cui"}
-      end
-      
-      it "does not create a user when input is invalid" do
-        expect(User.count).to eq(0)
-      end
-
-      it "renders the new template when input is invalid" do
-        expect(response).to render_template :new
+        result = double('signup_result', successful?: false, error_message: 'error_message')
+        UserSignup.any_instance.should_receive(:sign_up).and_return(result)
+        post :create, user: Fabricate.attributes_for(:user)
       end
       
       it "sets @user variable" do
         expect(assigns(:user)).to be_instance_of(User)
+      end
+
+      it "renders new template" do
+        expect(response).to render_template 'new'
+      end
+
+      it "sets the flash error" do
+        expect(flash[:error]).to eq('error_message')
       end
     end
   end
