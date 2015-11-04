@@ -5,10 +5,10 @@ describe UserSignup do
     context "when there is a token" do
       let(:inviter) { Fabricate(:user) }
       let(:invitation) { Fabricate(:invitation, user: inviter) }
-      let(:charge) { double('charge', successful?: true) }
+      let(:customer) { double('charge', successful?: true) }
 
       before do
-        allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
+        allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
         UserSignup.new(Fabricate.build(:user, full_name: 'Alice')).sign_up('123', invitation.token)
       end
 
@@ -27,10 +27,10 @@ describe UserSignup do
     end
 
     context "when perfonal info and card is valid" do
-      let(:charge) { double('charge', successful?: true) }
+      let(:customer) { double('charge', successful?: true) }
 
       before do
-        allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
+        allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
         UserSignup.new(Fabricate.build(:user, email_address: 'example@example.com', full_name: 'J')).sign_up('123', nil)
       end
 
@@ -51,18 +51,18 @@ describe UserSignup do
 
     context "when personal info is valid but card is invalid" do
       it "does not create a user" do
-        charge = double('charge', successful?: false, error_message: 'Your card was declined.')
-        allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
+        customer = double('charge', successful?: false, error_message: 'Your card was declined.')
+        allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
         UserSignup.new(Fabricate.build(:user)).sign_up('123', nil)
         expect(User.count).to eq(0)
       end
     end
 
     context "when personal info is invalid" do
-      let(:charge) { double('charge', successful?: true) }
+      let(:customer) { double('charge', successful?: true) }
 
       before do
-        allow(StripeWrapper::Charge).to receive(:create).and_return(charge)
+        allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
       end
       
       after { ActionMailer::Base.deliveries.clear }

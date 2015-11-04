@@ -7,10 +7,10 @@ class UserSignup
 
   def sign_up(stripeToken, invitation_token)
     if @user.valid?
-      charge = StripeWrapper::Charge.create(
-      :amount => 999,
+      charge = StripeWrapper::Customer.create(
       :source => stripeToken,
-      :description => "Monthly Subscription for @{@user.email_address}"
+      :description => "Monthly Base Subscription",
+      :email => @user.email_address
     )
       if charge.successful?
         @user.save
