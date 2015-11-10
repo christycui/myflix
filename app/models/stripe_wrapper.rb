@@ -43,5 +43,9 @@ module StripeWrapper
     def successful?
       error_message.blank?
     end
+
+    def customer_token
+      response.id
+    end
   end
 end

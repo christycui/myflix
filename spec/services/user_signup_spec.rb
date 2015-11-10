@@ -5,7 +5,7 @@ describe UserSignup do
     context "when there is a token" do
       let(:inviter) { Fabricate(:user) }
       let(:invitation) { Fabricate(:invitation, user: inviter) }
-      let(:customer) { double('charge', successful?: true) }
+      let(:customer) { double('charge', successful?: true, customer_token: 'abc') }
 
       before do
         allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
@@ -27,7 +27,7 @@ describe UserSignup do
     end
 
     context "when perfonal info and card is valid" do
-      let(:customer) { double('charge', successful?: true) }
+      let(:customer) { double('charge', successful?: true, customer_token: 'abc') }
 
       before do
         allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
@@ -38,6 +38,10 @@ describe UserSignup do
 
       it "create a user" do
         expect(User.count).to eq(1)
+      end
+
+      it "stores the customer token from stripe" do
+        expect(User.first.customer_token).to eq('abc')
       end
 
       it 'sends an email to new user' do

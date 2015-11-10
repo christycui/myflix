@@ -13,6 +13,7 @@ class UserSignup
       :email => @user.email_address
     )
       if charge.successful?
+        @user.customer_token = charge.customer_token
         @user.save
         handle_invitation(invitation_token)
         AppMailer.welcome_new_user(@user).deliver

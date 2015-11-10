@@ -58,6 +58,11 @@ describe StripeWrapper do
         response = StripeWrapper::Customer.create(source: declined_card_token, email: 'example@example.com')
         expect(response.error_message).to eq('Your card was declined.')
       end
+
+      it 'returns the customer token for valid vard', :vcr do
+        response = StripeWrapper::Customer.create(source: valid_token, email: 'example@example.com')
+        expect(response.customer_token).to be_present
+      end
     end
   end
 end
