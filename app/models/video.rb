@@ -22,20 +22,41 @@ class Video < ActiveRecord::Base
     reviews.average(:rating).round(1) if reviews.average(:rating)
   end
 
-  def self.search(query)
+  def self.search(query, options={})
     search_definition = {
       query: {
         multi_match: {
         query: query, 
         operator: "and",
-        fields: [ "title", "description" ] 
+        fields: [ "title^100", "description^50" ] 
         }
       }
     }
+    if query.present? && options[:reviews]
+      search_definition[:query][:multi_match][:fields] << "reviews.body"
+    end
+
+    if query.present? && (options[:rating_from].present? || options[:rating_to]).present?
+      search_definition[:filter] = {
+        range: {
+          rating: {
+            gte: ( options[:rating_from] if options[:rating_from].present? ),
+            lte: ( options[:rating_to] if options[:rating_to].present? )
+          }
+        }
+      }
+    end
+
     __elasticsearch__.search search_definition
   end
 
   def as_indexed_json(options={})
-    as_json(only: [:title, :description])
+    as_json(
+      only: [:title, :description], 
+      include: { 
+        reviews: { only: [:body] }
+      },
+      methods: [:rating]
+    )
   end
 end
