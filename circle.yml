@@ -1,6 +1,8 @@
 machine:
   ruby:
     version: 2.1.6
+  services:
+    - elasticsearch
 deployment:
   production:
     branch: master
@@ -14,7 +16,6 @@ deployment:
     branch: staging
     commands:
       - heroku maintenance:on --app myflix-cui-staging
-      - git fetch origin --unshallow
       - git push git@heroku.com:myflix-cui-staging.git $CIRCLE_SHA1:refs/heads/master
       - heroku run rake db:migrate --app myflix-cui-staging
       - heroku maintenance:off --app myflix-cui-staging
