@@ -8,8 +8,8 @@ describe StripeWrapper do
           :exp_month => 10,
           :exp_year => 2016,
           :cvc => "314"
-        },
-      ).id
+      },
+    ).id
   end
 
   let(:declined_card_token) do

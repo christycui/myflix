@@ -25,13 +25,13 @@
           %span.glyphicon.glyphicon-search
           Search
   %hr
-  - if @videos != []
+  - if @videos.any?
     %h2.results_count Results: #{@videos.count} videos found
     - @videos.each do |video|
       %article.video.row
         .video_data
           %figure.col-sm-2
-            %img(src="#{video.small_cover_url}" alt="#{video.title}")
+            = image_tag(video.small_cover_url)
           .video_body.col-sm-10
             %header
               %h3
@@ -39,9 +39,9 @@
             %p.video_description
               = video.description
             %hr
-            - if video.reviews != []
+            - if video.reviews.any?
               .details
-                %span.average_rating= "Average rating: #{video.rating}"
+                %span.average_rating Average rating: #{video.rating}
                 %span.reviews_count= "#{video.reviews.count} reviews"
               %footer.video_review
                 - video.reviews.each do |review|
