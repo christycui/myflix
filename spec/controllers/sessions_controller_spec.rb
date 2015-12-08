@@ -43,7 +43,7 @@ describe SessionsController do
       end
 
       it "sets flash error" do
-        expect(flash[:error]).to be_present
+        expect(flash[:error]).to eq("Your account is currently inactive. An email has been sent to your registered address.")
       end
     end
     

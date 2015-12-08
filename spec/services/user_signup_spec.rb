@@ -31,7 +31,7 @@ describe UserSignup do
 
       before do
         allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
-        UserSignup.new(Fabricate.build(:user, email_address: 'example@example.com', full_name: 'J')).sign_up('123')
+        UserSignup.new(Fabricate.build(:user, email_address: 'example@example.com', full_name: 'J')).sign_up('123', nil)
       end
 
       after { ActionMailer::Base.deliveries.clear }
@@ -57,7 +57,7 @@ describe UserSignup do
       it "does not create a user" do
         customer = double('charge', successful?: false, error_message: 'Your card was declined.')
         allow(StripeWrapper::Customer).to receive(:create).and_return(customer)
-        UserSignup.new(Fabricate.build(:user)).sign_up('123')
+        UserSignup.new(Fabricate.build(:user)).sign_up('123', nil)
         expect(User.count).to eq(0)
       end
     end
@@ -72,17 +72,17 @@ describe UserSignup do
       after { ActionMailer::Base.deliveries.clear }
       
       it "does not create a user when input is invalid" do
-        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1')
+        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1', nil)
         expect(User.count).to eq(0)
       end
 
       it "does not charge the card" do
         StripeWrapper::Charge.should_not_receive(:create)
-        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1')
+        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1', nil)
       end
 
       it 'does not send out an email with invalid input' do
-        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1')
+        UserSignup.new(User.new(email_address: "christycui@example.com", full_name: "Christy Cui")).sign_up('1', nil)
         expect(ActionMailer::Base.deliveries).to be_empty
       end
     end
