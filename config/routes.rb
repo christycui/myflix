@@ -10,7 +10,6 @@ Myflix::Application.routes.draw do
   resources :videos, only: [:show] do
     collection do
       get '/search', to: 'videos#search'
-      get '/advanced_search', to: 'videos#advanced_search'
     end
     resources :reviews, only: [:create]
   end
@@ -18,7 +17,6 @@ Myflix::Application.routes.draw do
   resources :users, only: [:create, :show, :update]
   namespace :admin do
     resources :videos, only: [:new, :create]
-    get '/payments', to: 'payments#index'
   end
   get "/people", to: "relationships#index"
   resources :relationships, only: [:create, :destroy]
@@ -35,5 +33,4 @@ Myflix::Application.routes.draw do
   resources :invitations, only: [:new, :create]
 
   mount Sidekiq::Web, at: '/sidekiq'
-  mount StripeEvent::Engine, at: '/stripe_events'
 end

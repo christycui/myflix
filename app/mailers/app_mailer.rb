@@ -11,11 +11,6 @@ class AppMailer < ActionMailer::Base
 
   def invitation(invitation)
     @invitation = invitation
-    mail from: 'no-reply@myflix.com', to: invitation.email, subject: 'MyFliX Invite'
-  end
-
-  def account_inactive(user)
-    @user = user
-    mail from: 'customer_service@myflix.com', to: user.email_address, subject: 'Your MyFliX Account Is Currently Inactive'
+    mail from: 'no-reply@myflix.com', to: invitation.email, subject: 'Myflix Invite'
   end
 end

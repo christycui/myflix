@@ -16,12 +16,5 @@ feature "user logs in" do
     expect(page).to have_content('Sign In')
     expect(page).to have_content('Invalid email or password')
   end
-
-  scenario "account is deactivated" do
-    user = Fabricate(:user, active: false)
-    sign_in(user)
-    expect(page).not_to have_content(user.full_name)
-    expect(page).to have_content("Your account is currently inactive. An email has been sent to your registered address.")
-  end
  
 end
