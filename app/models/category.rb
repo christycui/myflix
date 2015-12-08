@@ -1,8 +1,8 @@
 class Category < ActiveRecord::Base
-  has_many :videos, -> {order "title"}
+  has_many :videos
   
   validates_presence_of :name
   def recent_videos
-    Video.order("created_at DESC").limit(6)
+    videos.order("created_at DESC").limit(6)
   end
 end

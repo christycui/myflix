@@ -2,10 +2,10 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.stripe.com/v1/charges
+    uri: https://api.stripe.com/v1/customers
     body:
       encoding: US-ASCII
-      string: amount=999&currency=usd&source=tok_16s44xAB0zIqu5n08FWCwAr7&description=Monthly%20Subscription%20for%20%40%7B%40user.email_address%7D
+      string: source=tok_173RE8AB0zIqu5n08OLiUuoo&plan=1&email=example%40example.com
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
@@ -22,7 +22,7 @@ http_interactions:
         Haiyings-Air.fios-router.home 14.5.0 Darwin Kernel Version 14.5.0: Wed Jul
         29 02:26:53 PDT 2015; root:xnu-2782.40.9~1/RELEASE_X86_64 x86_64","hostname":"Haiyings-Air.fios-router.home"}'
       Content-Length:
-      - '133'
+      - '70'
   response:
     status:
       code: 402
@@ -31,11 +31,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Sun, 04 Oct 2015 04:26:32 GMT
+      - Wed, 04 Nov 2015 13:23:01 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '198'
+      - '153'
       Connection:
       - keep-alive
       Access-Control-Allow-Credentials:
@@ -49,7 +49,7 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_76GcHNB9tDH1yc
+      - req_7I1GCNNvqXgg5z
       Stripe-Version:
       - '2015-08-19'
     body:
@@ -60,10 +60,9 @@ http_interactions:
             "message": "Your card's security code is incorrect.",
             "type": "card_error",
             "param": "cvc",
-            "code": "incorrect_cvc",
-            "charge": "ch_16s44xAB0zIqu5n0XMRJ6oWm"
+            "code": "incorrect_cvc"
           }
         }
     http_version: 
-  recorded_at: Sun, 04 Oct 2015 04:26:32 GMT
+  recorded_at: Wed, 04 Nov 2015 13:23:02 GMT
 recorded_with: VCR 2.9.3

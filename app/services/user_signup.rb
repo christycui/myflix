@@ -5,14 +5,15 @@ class UserSignup
     @user = user
   end
 
-  def sign_up(stripeToken, invitation_token)
+  def sign_up(stripeToken, invitation_token=nil)
     if @user.valid?
-      charge = StripeWrapper::Charge.create(
-      :amount => 999,
-      :source => stripeToken,
-      :description => "Monthly Subscription for @{@user.email_address}"
-    )
+      charge = StripeWrapper::Customer.create(
+        :source => stripeToken,
+        :description => "Monthly Base Subscription",
+        :email => @user.email_address
+      )
       if charge.successful?
+        @user.customer_token = charge.customer_token
         @user.save
         handle_invitation(invitation_token)
         AppMailer.welcome_new_user(@user).deliver

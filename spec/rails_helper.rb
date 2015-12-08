@@ -77,4 +77,9 @@ RSpec.configure do |config|
   config.before(:each) do
     Sidekiq::Worker.clear_all
   end
+
+  # elasticsearch
+  config.before(:each, elasticsearch: true) do
+    Video.__elasticsearch__.create_index! force: true
+  end
 end
