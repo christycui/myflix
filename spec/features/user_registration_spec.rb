@@ -45,7 +45,7 @@ end
 def fill_in_valid_user_info
   fill_in "Email address", with: 'example@example.com'
   fill_in "Password", with: 'password'
-  fill_in "user[full_name]", with: 'Example'
+  fill_in "Full name", with: 'Example'
 end
 
 def fill_in_invalid_user_info

@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   has_many :followers, through: :relationships
   has_many :following_relationships, class_name: "Relationship", foreign_key: :follower_id
   has_many :invitations
+  has_many :payments
   
   validates :email_address, presence: true, uniqueness: true
   validates :password, presence: true, on: :create
@@ -26,6 +27,10 @@ class User < ActiveRecord::Base
 
   def generate_new_token
     generate_token
+  end
+
+  def deactivate!
+    update_column(:active, false)
   end
   
 end
